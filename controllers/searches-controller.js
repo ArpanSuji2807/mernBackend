@@ -34,8 +34,12 @@ searchCtrl.fetchCustomerData = async(req,res,next) => {
 
         axios(config).then(async(response) => {
             if(response.data && response.data.items.length > 0){
-               let finalData = await getDisplayData(response.data.items);
-               return res.status(200).json({status: 'success', data: finalData});
+                let finalData;
+                if(reqBody.from_ui){
+                    finalData = await getDisplayData(response.data.items);
+                }else{
+                    finalData = response.data.items;
+                }               return res.status(200).json({status: 'success', data: finalData});
             }
         }).catch((error) => {
             console.log('error1')
@@ -67,20 +71,6 @@ function getDisplayData(items){
     return displayArray;
 }
 
-
-searchCtrl.createUserLog = async (req, res) => {
-    try {
-        let reqBody = JSON.parse(JSON.stringify(req.body));
-        let postData = {
-            action:{
-                customer_name: reqBody.customer_name,                
-            },
-            date: new Date()
-        }
-    } catch (error) {
-        res.status
-    }
-}
 
 module.exports = {
     searchCtrl
